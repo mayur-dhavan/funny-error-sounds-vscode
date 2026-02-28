@@ -1,0 +1,72 @@
+{
+  "name": "funny-error-sounds",
+  "displayName": "Funny Error Sounds",
+  "description": "Plays hilarious funny sounds when terminal commands fail. Desi meme sounds included! 🔊",
+  "version": "1.0.0",
+  "publisher": "funny-sounds",
+  "engines": {
+    "vscode": "^1.93.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "funny",
+    "sounds",
+    "terminal",
+    "error",
+    "meme",
+    "desi",
+    "comedy"
+  ],
+  "icon": "images/icon.png",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "funnyErrorSounds.testSound",
+        "title": "Funny Sounds: Play Test Sound 🔊"
+      },
+      {
+        "command": "funnyErrorSounds.toggle",
+        "title": "Funny Sounds: Toggle On/Off"
+      }
+    ],
+    "configuration": {
+      "title": "Funny Error Sounds",
+      "properties": {
+        "funnyErrorSounds.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable funny error sounds."
+        },
+        "funnyErrorSounds.soundDuration": {
+          "type": "number",
+          "default": 5,
+          "minimum": 1,
+          "maximum": 30,
+          "description": "How many seconds to play each sound clip (default: 5)."
+        },
+        "funnyErrorSounds.showNotification": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show a notification with the sound name when it plays."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.93.0",
+    "typescript": "^5.3.0"
+  }
+}
