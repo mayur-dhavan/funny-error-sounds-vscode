@@ -2,8 +2,8 @@
   "name": "funny-error-sounds",
   "displayName": "Funny Error Sounds",
   "description": "Plays hilarious funny sounds when terminal commands fail. Desi meme sounds included! 🔊",
-  "version": "1.0.0",
-  "publisher": "ca585886-84b9-6633-a5b6-80ece1abbe63",
+  "version": "1.0.1",
+  "publisher": "MayurDhavan",
   "repository": {
     "type": "git",
     "url": "https://github.com/mayur-dhavan/funny-error-sounds-vscode"
