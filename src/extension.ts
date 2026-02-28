@@ -31,8 +31,15 @@ export function activate(context: vscode.ExtensionContext) {
         if (event.exitCode !== undefined && event.exitCode !== 0) {
             const duration = config.get<number>('soundDuration', 5);
             const showNotification = config.get<boolean>('showNotification', true);
+            const soundMode = config.get<string>('soundMode', 'random');
+            const selectedSound = config.get<string>('selectedSound', '');
 
-            const soundName = soundPlayer.playRandomSound(duration);
+            let soundName: string | null;
+            if (soundMode === 'selected' && selectedSound) {
+                soundName = soundPlayer.playSpecificSound(selectedSound, duration);
+            } else {
+                soundName = soundPlayer.playRandomSound(duration);
+            }
 
             if (soundName && showNotification) {
                 vscode.window.showInformationMessage(
@@ -68,6 +75,84 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
     context.subscriptions.push(testCmd);
+
+    // Choose sound command — shows a Quick Pick with all available sounds
+    const chooseCmd = vscode.commands.registerCommand('funnyErrorSounds.chooseSound', async () => {
+        const sounds = soundPlayer.getSoundList();
+        if (sounds.length === 0) {
+            vscode.window.showWarningMessage('No sound files found in the sounds/ folder!');
+            return;
+        }
+
+        const config = vscode.workspace.getConfiguration('funnyErrorSounds');
+        const currentSelected = config.get<string>('selectedSound', '');
+        const duration = config.get<number>('soundDuration', 5);
+
+        // Build Quick Pick items
+        const items: vscode.QuickPickItem[] = [
+            {
+                label: '$(shuffle) Random',
+                description: 'Play a different sound each time',
+                detail: config.get<string>('soundMode') === 'random' ? '$(check) Currently active' : undefined
+            },
+            { label: '', kind: vscode.QuickPickItemKind.Separator },
+            ...sounds.map(s => ({
+                label: `$(play) ${s.label}`,
+                description: s.filename,
+                detail: s.filename === currentSelected ? '$(check) Currently selected' : undefined
+            }))
+        ];
+
+        const pick = vscode.window.createQuickPick();
+        pick.items = items;
+        pick.title = '🎵 Choose Your Error Sound';
+        pick.placeholder = 'Search sounds... (select to preview, press Enter to confirm)';
+        pick.matchOnDescription = true;
+
+        // Preview sound on highlight
+        pick.onDidChangeActive(activeItems => {
+            if (activeItems.length > 0) {
+                const item = activeItems[0];
+                if (item.description && item.description !== 'Play a different sound each time') {
+                    soundPlayer.playSpecificSound(item.description, 3);
+                }
+            }
+        });
+
+        pick.onDidAccept(() => {
+            const selected = pick.selectedItems[0];
+            if (!selected) {
+                pick.dispose();
+                return;
+            }
+
+            soundPlayer.stop();
+
+            if (selected.description === 'Play a different sound each time') {
+                // User chose Random mode
+                config.update('soundMode', 'random', vscode.ConfigurationTarget.Global);
+                config.update('selectedSound', '', vscode.ConfigurationTarget.Global);
+                vscode.window.showInformationMessage('🎲 Sound mode: Random — a different sound on every error!');
+            } else {
+                // User chose a specific sound
+                const filename = selected.description!;
+                config.update('soundMode', 'selected', vscode.ConfigurationTarget.Global);
+                config.update('selectedSound', filename, vscode.ConfigurationTarget.Global);
+                const niceName = selected.label.replace('$(play) ', '');
+                vscode.window.showInformationMessage(`🎵 Error sound set to: ${niceName}`);
+            }
+
+            pick.dispose();
+        });
+
+        pick.onDidHide(() => {
+            soundPlayer.stop();
+            pick.dispose();
+        });
+
+        pick.show();
+    });
+    context.subscriptions.push(chooseCmd);
 
     // Toggle on/off command
     const toggleCmd = vscode.commands.registerCommand('funnyErrorSounds.toggle', () => {

@@ -33,6 +33,10 @@
       {
         "command": "funnyErrorSounds.toggle",
         "title": "Funny Sounds: Toggle On/Off"
+      },
+      {
+        "command": "funnyErrorSounds.chooseSound",
+        "title": "Funny Sounds: Choose Sound Effect 🎵"
       }
     ],
     "configuration": {
@@ -54,6 +58,21 @@
           "type": "boolean",
           "default": true,
           "description": "Show a notification with the sound name when it plays."
+        },
+        "funnyErrorSounds.soundMode": {
+          "type": "string",
+          "default": "random",
+          "enum": ["random", "selected"],
+          "enumDescriptions": [
+            "Play a random sound on each error",
+            "Always play the chosen sound"
+          ],
+          "description": "Whether to play a random sound or a specific chosen sound."
+        },
+        "funnyErrorSounds.selectedSound": {
+          "type": "string",
+          "default": "",
+          "description": "The filename of the chosen sound (used when soundMode is 'selected')."
         }
       }
     }

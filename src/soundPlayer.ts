@@ -42,6 +42,43 @@ export class SoundPlayer {
     }
 
     /**
+     * Get a list of all available sound names (human-readable) with their filenames.
+     */
+    public getSoundList(): { label: string; filename: string }[] {
+        return this.soundFiles.map(filePath => {
+            const filename = path.basename(filePath);
+            const label = path.basename(filePath, path.extname(filePath))
+                .replace(/-/g, ' ')
+                .replace(/\b\w/g, c => c.toUpperCase());
+            return { label, filename };
+        });
+    }
+
+    /**
+     * Play a specific sound by filename.
+     * Returns the human-readable sound name, or null if not found.
+     */
+    public playSpecificSound(filename: string, durationSeconds: number = 5): string | null {
+        const soundPath = this.soundFiles.find(
+            f => path.basename(f) === filename
+        );
+
+        if (!soundPath) {
+            console.warn(`[FunnyErrorSounds] Sound not found: ${filename}`);
+            return null;
+        }
+
+        this.stop();
+
+        const soundName = path.basename(soundPath, path.extname(soundPath))
+            .replace(/-/g, ' ')
+            .replace(/\b\w/g, c => c.toUpperCase());
+
+        this.playSoundFile(soundPath, durationSeconds);
+        return soundName;
+    }
+
+    /**
      * Play a random sound from the collection.
      * Returns the filename of the sound being played.
      */
