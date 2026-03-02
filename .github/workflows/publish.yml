@@ -8,10 +8,14 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -27,9 +31,11 @@ jobs:
       - name: Install vsce and ovsx
         run: npm install -g @vscode/vsce ovsx
 
-      - name: Bump patch version and package
-        run: vsce package patch --no-git-tag-version
-        # Auto-increments the patch version in package.json and builds a .vsix file
+      - name: Bump patch version
+        run: npm version patch --no-git-tag-version
+
+      - name: Package extension
+        run: vsce package
 
       - name: Publish to VS Code Marketplace
         run: vsce publish -p ${{ secrets.VSCE_PAT }} --packagePath $(ls *.vsix)
