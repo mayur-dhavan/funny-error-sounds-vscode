@@ -35,7 +35,17 @@ export function activate(context: vscode.ExtensionContext) {
             const selectedSound = config.get<string>('selectedSound', '');
 
             let soundName: string | null;
-            if (soundMode === 'selected' && selectedSound) {
+            if (soundMode === 'custom') {
+                const customPath = config.get<string>('customSoundPath', '');
+                if (customPath) {
+                    soundName = soundPlayer.playFileFromPath(customPath, duration);
+                } else {
+                    vscode.window.showWarningMessage(
+                        'No custom sound file set. Use "Funny Sounds: Upload Custom Sound File" to pick one.'
+                    );
+                    soundName = null;
+                }
+            } else if (soundMode === 'selected' && selectedSound) {
                 soundName = soundPlayer.playSpecificSound(selectedSound, duration);
             } else {
                 soundName = soundPlayer.playRandomSound(duration);
@@ -153,6 +163,40 @@ export function activate(context: vscode.ExtensionContext) {
         pick.show();
     });
     context.subscriptions.push(chooseCmd);
+
+    // Upload custom sound command — opens a file picker and saves the path
+    const uploadCmd = vscode.commands.registerCommand('funnyErrorSounds.uploadCustomSound', async () => {
+        const uris = await vscode.window.showOpenDialog({
+            canSelectMany: false,
+            openLabel: 'Use This Sound',
+            filters: {
+                'Audio Files': ['mp3', 'wav', 'ogg', 'm4a', 'aac', 'wma', 'flac']
+            },
+            title: 'Select Your Custom Error Sound'
+        });
+
+        if (!uris || uris.length === 0) {
+            return;
+        }
+
+        const filePath = uris[0].fsPath;
+        const config = vscode.workspace.getConfiguration('funnyErrorSounds');
+        await config.update('customSoundPath', filePath, vscode.ConfigurationTarget.Global);
+        await config.update('soundMode', 'custom', vscode.ConfigurationTarget.Global);
+
+        const duration = config.get<number>('soundDuration', 5);
+        const soundName = soundPlayer.playFileFromPath(filePath, duration);
+
+        vscode.window.showInformationMessage(
+            `📂 Custom sound set: ${soundName ?? filePath}`,
+            'Stop Sound'
+        ).then(selection => {
+            if (selection === 'Stop Sound') {
+                soundPlayer.stop();
+            }
+        });
+    });
+    context.subscriptions.push(uploadCmd);
 
     // Toggle on/off command
     const toggleCmd = vscode.commands.registerCommand('funnyErrorSounds.toggle', () => {
