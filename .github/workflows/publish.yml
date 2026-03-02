@@ -27,8 +27,20 @@ jobs:
       - name: Install vsce and ovsx
         run: npm install -g @vscode/vsce ovsx
 
+      - name: Bump patch version and package
+        run: vsce package patch --no-git-tag-version
+        # Auto-increments the patch version in package.json and builds a .vsix file
+
       - name: Publish to VS Code Marketplace
-        run: vsce publish -p ${{ secrets.VSCE_PAT }}
+        run: vsce publish -p ${{ secrets.VSCE_PAT }} --packagePath $(ls *.vsix)
 
       - name: Publish to Open VSX Registry
-        run: ovsx publish -p ${{ secrets.OVSX_PAT }}
+        run: ovsx publish $(ls *.vsix) -p ${{ secrets.OVSX_PAT }}
+
+      - name: Commit version bump
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add package.json
+          git commit -m "chore: bump version [skip ci]"
+          git push
