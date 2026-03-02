@@ -41,9 +41,7 @@ jobs:
         run: vsce publish -p ${{ secrets.VSCE_PAT }} --packagePath $(ls *.vsix)
 
       - name: Publish to Open VSX Registry
-        run: |
-          ovsx create-namespace MayurDhavan -p ${{ secrets.OVSX_PAT }} || true
-          ovsx publish $(ls *.vsix) -p ${{ secrets.OVSX_PAT }}
+        run: ovsx publish $(ls *.vsix) -p ${{ secrets.OVSX_PAT }}
 
       - name: Commit version bump
         run: |
