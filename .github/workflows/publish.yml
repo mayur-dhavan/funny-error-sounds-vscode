@@ -24,8 +24,11 @@ jobs:
       - name: Compile TypeScript
         run: npm run compile
 
-      - name: Install vsce
-        run: npm install -g @vscode/vsce
+      - name: Install vsce and ovsx
+        run: npm install -g @vscode/vsce ovsx
 
       - name: Publish to VS Code Marketplace
         run: vsce publish -p ${{ secrets.VSCE_PAT }}
+
+      - name: Publish to Open VSX Registry
+        run: ovsx publish -p ${{ secrets.OVSX_PAT }}
