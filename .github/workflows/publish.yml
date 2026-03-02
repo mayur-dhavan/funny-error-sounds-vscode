@@ -34,6 +34,14 @@ jobs:
       - name: Bump patch version
         run: npm version patch --no-git-tag-version
 
+      - name: Commit and push version bump
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add package.json
+          git commit -m "chore: bump version [skip ci]"
+          git push
+
       - name: Package extension
         run: vsce package
 
@@ -42,11 +50,3 @@ jobs:
 
       - name: Publish to Open VSX Registry
         run: ovsx publish $(ls *.vsix) -p ${{ secrets.OVSX_PAT }}
-
-      - name: Commit version bump
-        run: |
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git config user.name "github-actions[bot]"
-          git add package.json
-          git commit -m "chore: bump version [skip ci]"
-          git push
