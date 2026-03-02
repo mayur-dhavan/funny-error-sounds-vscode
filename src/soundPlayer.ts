@@ -104,6 +104,24 @@ export class SoundPlayer {
     }
 
     /**
+     * Play a sound from any absolute file path on disk.
+     * Returns the human-readable name, or null if file does not exist.
+     */
+    public playFileFromPath(filePath: string, durationSeconds: number = 5): string | null {
+        if (!fs.existsSync(filePath)) {
+            console.warn(`[FunnyErrorSounds] Custom sound file not found: ${filePath}`);
+            return null;
+        }
+
+        this.stop();
+        const soundName = path.basename(filePath, path.extname(filePath))
+            .replace(/-/g, ' ')
+            .replace(/\w/g, c => c.toUpperCase());
+        this.playSoundFile(filePath, durationSeconds);
+        return soundName;
+    }
+
+    /**
      * Play a specific sound file using platform-appropriate player.
      */
     private playSoundFile(filePath: string, durationSeconds: number): void {

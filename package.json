@@ -2,7 +2,7 @@
   "name": "funny-error-sounds",
   "displayName": "Funny Error Sounds",
   "description": "Plays hilarious funny sounds when terminal commands fail. Desi meme sounds included! 🔊",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "publisher": "MayurDhavan",
   "repository": {
     "type": "git",
@@ -41,6 +41,10 @@
       {
         "command": "funnyErrorSounds.chooseSound",
         "title": "Funny Sounds: Choose Sound Effect 🎵"
+      },
+      {
+        "command": "funnyErrorSounds.uploadCustomSound",
+        "title": "Funny Sounds: Upload Custom Sound File 📂"
       }
     ],
     "configuration": {
@@ -66,17 +70,23 @@
         "funnyErrorSounds.soundMode": {
           "type": "string",
           "default": "random",
-          "enum": ["random", "selected"],
+          "enum": ["random", "selected", "custom"],
           "enumDescriptions": [
             "Play a random sound on each error",
-            "Always play the chosen sound"
+            "Always play the chosen built-in sound",
+            "Always play your own uploaded audio file"
           ],
-          "description": "Whether to play a random sound or a specific chosen sound."
+          "description": "Whether to play a random sound, a specific chosen sound, or your own custom audio file."
         },
         "funnyErrorSounds.selectedSound": {
           "type": "string",
           "default": "",
           "description": "The filename of the chosen sound (used when soundMode is 'selected')."
+        },
+        "funnyErrorSounds.customSoundPath": {
+          "type": "string",
+          "default": "",
+          "description": "Absolute path to your own audio file (used when soundMode is 'custom'). Set via the 'Upload Custom Sound File' command."
         }
       }
     }
