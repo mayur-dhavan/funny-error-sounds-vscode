@@ -2,7 +2,7 @@
   "name": "funny-error-sounds",
   "displayName": "Funny Error Sounds",
   "description": "Plays hilarious funny sounds when terminal commands fail. Desi meme sounds included! 🔊",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "publisher": "MayurDhavan",
   "repository": {
     "type": "git",
@@ -82,11 +82,6 @@
           "type": "string",
           "default": "",
           "description": "The filename of the chosen sound (used when soundMode is 'selected')."
-        },
-        "funnyErrorSounds.customSoundPath": {
-          "type": "string",
-          "default": "",
-          "description": "Absolute path to your own audio file (used when soundMode is 'custom'). Set via the 'Upload Custom Sound File' command."
         }
       }
     }

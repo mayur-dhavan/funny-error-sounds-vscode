@@ -136,7 +136,6 @@ If you enjoy this extension, consider sponsoring its development!
 
 **Mayur Dhavan**
 - GitHub: [@mayur-dhavan](https://github.com/mayur-dhavan)
-- Portfolio: [mayur-dhavan.netlify.app](https://mayur-dhavan.netlify.app/)
 
 ## License
 

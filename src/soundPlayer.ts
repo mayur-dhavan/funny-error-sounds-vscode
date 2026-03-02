@@ -105,7 +105,7 @@ export class SoundPlayer {
 
     /**
      * Play a sound from any absolute file path on disk.
-     * Returns the human-readable name, or null if file does not exist.
+     * Returns the human-readable name, or null if the file does not exist.
      */
     public playFileFromPath(filePath: string, durationSeconds: number = 5): string | null {
         if (!fs.existsSync(filePath)) {
@@ -116,7 +116,7 @@ export class SoundPlayer {
         this.stop();
         const soundName = path.basename(filePath, path.extname(filePath))
             .replace(/-/g, ' ')
-            .replace(/\w/g, c => c.toUpperCase());
+            .replace(/\b\w/g, c => c.toUpperCase());
         this.playSoundFile(filePath, durationSeconds);
         return soundName;
     }

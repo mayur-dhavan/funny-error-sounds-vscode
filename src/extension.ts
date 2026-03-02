@@ -36,7 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
 
             let soundName: string | null;
             if (soundMode === 'custom') {
-                const customPath = config.get<string>('customSoundPath', '');
+                const customPath = context.globalState.get<string>('customSoundPath', '');
                 if (customPath) {
                     soundName = soundPlayer.playFileFromPath(customPath, duration);
                 } else {
@@ -181,7 +181,8 @@ export function activate(context: vscode.ExtensionContext) {
 
         const filePath = uris[0].fsPath;
         const config = vscode.workspace.getConfiguration('funnyErrorSounds');
-        await config.update('customSoundPath', filePath, vscode.ConfigurationTarget.Global);
+        // Store the path in globalState — no package.json registration required
+        await context.globalState.update('customSoundPath', filePath);
         await config.update('soundMode', 'custom', vscode.ConfigurationTarget.Global);
 
         const duration = config.get<number>('soundDuration', 5);
