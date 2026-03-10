@@ -137,6 +137,9 @@ If you enjoy this extension, consider sponsoring its development!
 **Mayur Dhavan**
 - GitHub: [@mayur-dhavan](https://github.com/mayur-dhavan)
 
+## Extension Link
+[VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=MayurDhavan.funny-error-sounds)<br>
+[Open VSX](https://open-vsx.org/extension/MayurDhavan/funny-error-sounds)
 ## License
 
 MIT
